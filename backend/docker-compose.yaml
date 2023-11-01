@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  # Django App
+  backend:
+   container_name: django
+   build: .
+   volumes:
+    - .:/app
+   ports:
+    - 8000:8000
+   depends_on:
+    - academy_db
+    - redis
+   tty: true  # Add this line to enable pseudo-terminal allocation
+    
+  # Database (PostgreSQL)g
+  academy_db:
+   image: postgres
+   container_name: postgresql
+   restart: always
+   environment:
+      POSTGRES_DB: academy_db
+      POSTGRES_USER: richeese
+      POSTGRES_PASSWORD: postgres
+   ports:
+    - 5432:5432
+   volumes:
+      - .dbdata:/var/lib/postgresql
+  
+  # Redis Cache
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
